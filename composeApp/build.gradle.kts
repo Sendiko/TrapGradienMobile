@@ -1,8 +1,8 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.kotlinSerialization)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
@@ -29,6 +29,12 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            /* Koin Android */
+            implementation(libs.koin.android)
+            implementation(libs.koin.androidx.compose)
+
+            /* Ktor OkHttp */
+            implementation(libs.ktor.client.okhttp)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -39,9 +45,32 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation(libs.navigation.compose)
+
+            /* DataStore */
+            api(libs.datastore)
+            api(libs.datastore.preferences)
+
+            /* Serialization Json */
+            implementation(libs.kotlinx.serialization.json)
+
+            /* Koin */
+            implementation(libs.koin.compose.viewmodel)
+            api(libs.koin.core)
+
+            /* Ktor */
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.client.auth)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+        }
+        iosMain.dependencies {
+            /* Ktor Darwin */
+            implementation(libs.ktor.client.darwin)
         }
     }
 }
