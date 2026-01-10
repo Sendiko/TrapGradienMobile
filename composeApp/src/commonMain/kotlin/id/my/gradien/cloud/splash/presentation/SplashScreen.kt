@@ -7,10 +7,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -19,7 +22,16 @@ import trapgradienmobile.composeapp.generated.resources.app_name
 import trapgradienmobile.composeapp.generated.resources.trapgradien
 
 @Composable
-fun SplashScreen(modifier: Modifier = Modifier) {
+fun SplashScreen(
+    modifier: Modifier = Modifier,
+    onNavigate: () -> Unit,
+) {
+
+    LaunchedEffect(true) {
+        delay(2000L)
+        onNavigate()
+    }
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -29,8 +41,8 @@ fun SplashScreen(modifier: Modifier = Modifier) {
                         MaterialTheme.colorScheme.tertiaryContainer,
                         MaterialTheme.colorScheme.primaryContainer
                     ),
-                    start = androidx.compose.ui.geometry.Offset(0f, Float.POSITIVE_INFINITY),
-                    end = androidx.compose.ui.geometry.Offset(Float.POSITIVE_INFINITY, 0f)
+                    start = Offset(0f, Float.POSITIVE_INFINITY),
+                    end = Offset(Float.POSITIVE_INFINITY, 0f)
                 )
             ),
         contentAlignment = Alignment.Center
@@ -46,5 +58,8 @@ fun SplashScreen(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 fun SplashScreenPreview() {
-    SplashScreen()
+    SplashScreen(
+        modifier = Modifier,
+        onNavigate = {  }
+    )
 }
