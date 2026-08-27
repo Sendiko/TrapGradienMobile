@@ -9,6 +9,9 @@ data object SplashScreen
 data object LoginScreen
 
 @Serializable
+data object DashboardScreen
+
+@Serializable
 data object HomeScreen
 
 @Serializable

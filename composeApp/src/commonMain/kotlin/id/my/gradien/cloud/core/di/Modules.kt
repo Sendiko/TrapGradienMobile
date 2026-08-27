@@ -1,6 +1,7 @@
 package id.my.gradien.cloud.core.di
 
 import id.my.gradien.cloud.core.network.HttpClientFactory
+import id.my.gradien.cloud.dashboard.presentation.DashboardViewModel
 import id.my.gradien.cloud.login.data.LoginRepositoryImpl
 import id.my.gradien.cloud.login.data.datasource.LoginDataSource
 import id.my.gradien.cloud.login.data.datasource.LoginDataSourceImpl
@@ -20,4 +21,5 @@ val sharedModules = module {
     singleOf(::LoginRepositoryImpl).bind<LoginRepository>()
 
     factory { LoginViewModel(get()) }
+    factory { DashboardViewModel() }
 }
