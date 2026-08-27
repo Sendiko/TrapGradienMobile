@@ -2,10 +2,7 @@ package id.my.gradien.cloud.login.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import id.my.gradien.cloud.core.network.utils.onError
-import id.my.gradien.cloud.core.network.utils.onSuccess
 import id.my.gradien.cloud.core.ui.utils.UiText
-import id.my.gradien.cloud.core.ui.utils.asUiText
 import id.my.gradien.cloud.login.domain.LoginRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
