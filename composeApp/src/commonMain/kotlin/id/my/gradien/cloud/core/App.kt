@@ -8,12 +8,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import id.my.gradien.cloud.core.navigation.DashboardScreen
 import id.my.gradien.cloud.core.navigation.LoginScreen
+import id.my.gradien.cloud.core.navigation.NodeListScreen as NodeListDestination
 import id.my.gradien.cloud.core.navigation.SplashScreen
 import id.my.gradien.cloud.core.ui.theme.AppTheme
 import id.my.gradien.cloud.dashboard.presentation.DashboardScreen
 import id.my.gradien.cloud.dashboard.presentation.DashboardViewModel
 import id.my.gradien.cloud.login.presentation.LoginScreen
 import id.my.gradien.cloud.login.presentation.LoginViewModel
+import id.my.gradien.cloud.node.list.presentation.NodeListScreen
+import id.my.gradien.cloud.node.list.presentation.NodeListViewModel
 import id.my.gradien.cloud.splash.presentation.SplashScreen
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -56,7 +59,21 @@ fun App(darkTheme: Boolean) {
 
                 DashboardScreen(
                     state = state,
-                    onEvent = viewModel::onEvent
+                    onEvent = viewModel::onEvent,
+                    onNavigateToListAlat = {
+                        navController.navigate(NodeListDestination)
+                    }
+                )
+            }
+            composable<NodeListDestination> {
+                val viewModel = koinViewModel<NodeListViewModel>()
+                val state by viewModel.state.collectAsStateWithLifecycle()
+
+                NodeListScreen(
+                    state = state,
+                    onBackClick = {
+                        navController.popBackStack()
+                    }
                 )
             }
         }

@@ -28,6 +28,7 @@ import trapgradienmobile.composeapp.generated.resources.*
 fun DashboardScreen(
     state: DashboardState,
     onEvent: (DashboardEvent) -> Unit,
+    onNavigateToListAlat: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val sheetState = rememberModalBottomSheetState()
@@ -61,7 +62,10 @@ fun DashboardScreen(
             SectionHeader(
                 title = stringResource(Res.string.alat_title),
                 actionText = stringResource(Res.string.lihat_semua),
-                onActionClick = { onEvent(DashboardEvent.OnLihatSemuaAlatClicked) }
+                onActionClick = { 
+                    onEvent(DashboardEvent.OnLihatSemuaAlatClicked)
+                    onNavigateToListAlat()
+                }
             )
 
             Spacer(modifier = Modifier.height(16.dp))

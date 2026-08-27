@@ -7,6 +7,7 @@ import id.my.gradien.cloud.login.data.datasource.LoginDataSource
 import id.my.gradien.cloud.login.data.datasource.LoginDataSourceImpl
 import id.my.gradien.cloud.login.domain.LoginRepository
 import id.my.gradien.cloud.login.presentation.LoginViewModel
+import id.my.gradien.cloud.node.list.presentation.NodeListViewModel
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -22,4 +23,5 @@ val sharedModules = module {
 
     factory { LoginViewModel(get()) }
     factory { DashboardViewModel() }
+    factory { NodeListViewModel() }
 }

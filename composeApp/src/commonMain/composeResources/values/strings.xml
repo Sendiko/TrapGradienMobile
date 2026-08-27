@@ -28,4 +28,7 @@
     <string name="informasi_polusi">Informasi Polusi</string>
     <string name="tambah_alat">Tambah alat</string>
     <string name="version_format">versi %s</string>
+    <string name="list_alat">List alat</string>
+    <string name="lorem_alat">Alat Lorem #1</string>
+    <string name="lorem_location">Cikoneng, Bojongsoang, Bandung</string>
 </resources>
