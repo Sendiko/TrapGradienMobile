@@ -11,4 +11,21 @@
     <string name="not_found">Can\'t find item you\'re looking for.</string>
     <string name="bad_request">Bad request.</string>
     <string name="unauthorized">Unauthorized.</string>
+    <string name="welcome_back">Selamat datang kembali!</string>
+    <string name="login_subtitle">Login dengan email dan passwordmu</string>
+    <string name="email_label">Email</string>
+    <string name="password_label">Password</string>
+    <string name="forgot_password">Lupa password?</string>
+    <string name="login_button">Login</string>
+    <string name="pure_breathing_smarter_living">Pure Breathing, Smarter Living</string>
+    <string name="hello_user">Halo, %s!</string>
+    <string name="current_location_label">Lokasi Saat ini</string>
+    <string name="alat_title">Alat</string>
+    <string name="lihat_semua">Lihat semua</string>
+    <string name="fitur_title">Fitur</string>
+    <string name="lihat_semua_alat">Lihat semua alat</string>
+    <string name="monitor_kualitas">Monitor kualitas</string>
+    <string name="informasi_polusi">Informasi Polusi</string>
+    <string name="tambah_alat">Tambah alat</string>
+    <string name="version_format">versi %s</string>
 </resources>

@@ -4,12 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.my.gradien.cloud.core.network.utils.onError
 import id.my.gradien.cloud.core.network.utils.onSuccess
+import id.my.gradien.cloud.core.ui.utils.UiText
 import id.my.gradien.cloud.core.ui.utils.asUiText
 import id.my.gradien.cloud.login.domain.LoginRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.seconds
 
 class LoginViewModel(
     private val repository: LoginRepository
@@ -31,21 +34,24 @@ class LoginViewModel(
     private fun login() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            repository.login(
-                email = state.value.email,
-                password = state.value.password
-            )
-                .onSuccess { result ->
-                    _state.update { it.copy(isLoading = false, isSuccess = true) }
-                }
-                .onError { error ->
-                    _state.update { it.copy(isError = true, isLoading = false, message = error.asUiText()) }
-                }
+            delay(2.seconds)
+            _state.update { it.copy(isLoading = false, isSuccess = true, message = UiText.DynamicString("Login Sukses")) }
+            // Warning: API Error 301
+//            repository.login(
+//                email = state.value.email,
+//                password = state.value.password
+//            )
+//                .onSuccess { result ->
+//                    _state.update { it.copy(isLoading = false, isSuccess = true) }
+//                }
+//                .onError { error ->
+//                    _state.update { it.copy(isError = true, isLoading = false, message = error.asUiText()) }
+//                }
         }
     }
 
     private fun clearState() {
-        _state.value = LoginState()
+        _state.update { LoginState() }
     }
 
     private fun changePasswordVisibility(visible: Boolean) {
