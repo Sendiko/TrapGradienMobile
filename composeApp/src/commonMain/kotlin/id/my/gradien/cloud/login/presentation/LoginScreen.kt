@@ -2,36 +2,50 @@ package id.my.gradien.cloud.login.presentation
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.outlined.Email
-import androidx.compose.material.icons.outlined.Fingerprint
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
-import androidx.compose.material.icons.outlined.WorkOutline
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import id.my.gradien.cloud.core.ui.theme.AppTheme
 import id.my.gradien.cloud.core.ui.theme.Dimens
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import trapgradienmobile.composeapp.generated.resources.*
 import trapgradienmobile.composeapp.generated.resources.Res
+import trapgradienmobile.composeapp.generated.resources.email_address_label
+import trapgradienmobile.composeapp.generated.resources.email_placeholder
+import trapgradienmobile.composeapp.generated.resources.login_button
+import trapgradienmobile.composeapp.generated.resources.login_subtitle
+import trapgradienmobile.composeapp.generated.resources.logo_description
+import trapgradienmobile.composeapp.generated.resources.password_label
+import trapgradienmobile.composeapp.generated.resources.password_placeholder
 import trapgradienmobile.composeapp.generated.resources.trapgradien
+import trapgradienmobile.composeapp.generated.resources.welcome_back
 
 @Composable
 fun LoginScreen(
@@ -138,7 +152,8 @@ fun LoginScreen(
                                 )
                             },
                             trailingIcon = {
-                                val icon = if (state.passwordVisible) Icons.Outlined.Visibility else Icons.Outlined.VisibilityOff
+                                val icon =
+                                    if (state.passwordVisible) Icons.Outlined.Visibility else Icons.Outlined.VisibilityOff
                                 IconButton(onClick = { onEvent(LoginEvent.OnPasswordVisibleChanged(!state.passwordVisible)) }) {
                                     Icon(imageVector = icon, contentDescription = null)
                                 }
