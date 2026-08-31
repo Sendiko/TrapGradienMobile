@@ -16,7 +16,13 @@ data object LoginScreen : Route
 data object HomeScreen : Route
 
 @Serializable
-data class NodeScreen(val id: String, val key: String) : Route
+data object ClustersScreen : Route
 
 @Serializable
 data object NodeListScreen : Route
+
+@Serializable
+data class NodeScreen(val id: String, val key: String) : Route
+
+@Serializable
+data object ProfileScreen : Route
