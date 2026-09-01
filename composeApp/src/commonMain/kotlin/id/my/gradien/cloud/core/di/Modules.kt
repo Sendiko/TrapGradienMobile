@@ -40,5 +40,5 @@ val sharedModules = module {
 
     factory { LoginViewModel(get(), get()) }
     factory { HomeViewModel(get(), get()) }
-    factory { ClustersViewModel(get(), get()) }
+    factory { ClustersViewModel(get(), get(), get()) }
 }
