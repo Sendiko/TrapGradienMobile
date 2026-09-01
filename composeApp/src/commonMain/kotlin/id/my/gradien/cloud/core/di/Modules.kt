@@ -10,6 +10,10 @@ import id.my.gradien.cloud.login.data.datasource.LoginDataSource
 import id.my.gradien.cloud.login.data.datasource.LoginDataSourceImpl
 import id.my.gradien.cloud.login.domain.LoginRepository
 import id.my.gradien.cloud.login.presentation.LoginViewModel
+import id.my.gradien.cloud.nodes.data.NodeRepositoryImpl
+import id.my.gradien.cloud.nodes.data.datasource.NodeDataSource
+import id.my.gradien.cloud.nodes.data.datasource.NodeDataSourceImpl
+import id.my.gradien.cloud.nodes.domain.NodeRepository
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -25,6 +29,9 @@ val sharedModules = module {
 
     singleOf(::ClusterDataSourceImpl).bind<ClusterDataSource>()
     singleOf(::ClusterRepositoryImpl).bind<ClusterRepository>()
+
+    singleOf(::NodeDataSourceImpl).bind<NodeDataSource>()
+    singleOf(::NodeRepositoryImpl).bind<NodeRepository>()
 
     factory { LoginViewModel(get()) }
 }
