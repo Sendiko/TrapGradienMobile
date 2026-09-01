@@ -3,6 +3,7 @@ package id.my.gradien.cloud.login.data.dto
 import id.my.gradien.cloud.login.domain.models.User
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 
 @Serializable
 data class LoginResponse(
@@ -46,10 +47,26 @@ data class LoginResponse(
 	@SerialName("username")
 	val username: String? = null
 ) {
-    fun toDomain() = User(
-        username = username ?: "",
-        name = name ?: "",
-        email = email ?: "",
-        password = password ?: ""
-    )
+    fun toDomain(): User {
+        val parsedNodes = try {
+            nodes?.let { Json.decodeFromString<List<String>>(it) } ?: emptyList()
+        } catch (e: Exception) {
+            emptyList()
+        }
+
+        val parsedClusters = try {
+            clusters?.let { Json.decodeFromString<List<String>>(it) } ?: emptyList()
+        } catch (e: Exception) {
+            emptyList()
+        }
+
+        return User(
+            username = username ?: "",
+            name = name ?: "",
+            email = email ?: "",
+            password = password ?: "",
+            nodeIds = parsedNodes,
+            clusterIds = parsedClusters
+        )
+    }
 }

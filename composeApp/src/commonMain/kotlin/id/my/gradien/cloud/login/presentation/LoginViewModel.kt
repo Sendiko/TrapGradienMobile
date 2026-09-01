@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import id.my.gradien.cloud.core.network.utils.onError
 import id.my.gradien.cloud.core.network.utils.onSuccess
+import id.my.gradien.cloud.core.session.SessionManager
 import id.my.gradien.cloud.core.ui.utils.asUiText
 import id.my.gradien.cloud.login.domain.LoginRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,7 +13,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
-    private val repository: LoginRepository
+    private val repository: LoginRepository,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LoginState())
@@ -35,7 +37,14 @@ class LoginViewModel(
                 email = state.value.email,
                 password = state.value.password
             )
-                .onSuccess { result ->
+                .onSuccess { user ->
+                    sessionManager.saveSession(
+                        name = user.name,
+                        email = user.email,
+                        password = user.password,
+                        nodeIds = user.nodeIds,
+                        clusterIds = user.clusterIds
+                    )
                     _state.update { it.copy(isLoading = false, isSuccess = true) }
                 }
                 .onError { error ->

@@ -38,4 +38,11 @@ inline fun <T, E : Error> Result<T, E>.onError(action: (E) -> Unit): Result<T, E
     }
 }
 
+fun <T, E : Error> Result<T, E>.getOrNull(): T? {
+    return when (this) {
+        is Result.Error -> null
+        is Result.Success -> data
+    }
+}
+
 typealias EmptyResult<E> = Result<Unit, E>

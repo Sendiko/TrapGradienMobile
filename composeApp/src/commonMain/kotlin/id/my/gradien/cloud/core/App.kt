@@ -9,30 +9,29 @@ import androidx.compose.material.icons.filled.Sensors
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.runtime.entryProvider
-import androidx.navigation3.ui.NavDisplay
-import androidx.savedstate.serialization.SavedStateConfiguration
-import id.my.gradien.cloud.core.navigation.ClustersScreen
-import id.my.gradien.cloud.core.navigation.HomeScreen
-import id.my.gradien.cloud.core.navigation.LoginScreen
-import id.my.gradien.cloud.core.navigation.Navigator
-import id.my.gradien.cloud.core.navigation.NodeListScreen
-import id.my.gradien.cloud.core.navigation.NodeScreen
-import id.my.gradien.cloud.core.navigation.ProfileScreen
-import id.my.gradien.cloud.core.navigation.Route
-import id.my.gradien.cloud.core.navigation.SplashScreen
-import id.my.gradien.cloud.core.navigation.rememberNavigationState
-import id.my.gradien.cloud.core.navigation.toEntries
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import id.my.gradien.cloud.clusters.presentation.ClustersScreen
+import id.my.gradien.cloud.clusters.presentation.ClustersViewModel
+import id.my.gradien.cloud.core.navigation.ClustersScreen as RouteClustersScreen
+import id.my.gradien.cloud.core.navigation.HomeScreen as RouteHomeScreen
+import id.my.gradien.cloud.core.navigation.LoginScreen as RouteLoginScreen
+import id.my.gradien.cloud.core.navigation.NodeListScreen as RouteNodeListScreen
+import id.my.gradien.cloud.core.navigation.ProfileScreen as RouteProfileScreen
+import id.my.gradien.cloud.core.navigation.SplashScreen as RouteSplashScreen
+import id.my.gradien.cloud.core.ui.components.GradienTopBar
 import id.my.gradien.cloud.core.ui.theme.AppTheme
+import id.my.gradien.cloud.home.presentation.HomeScreenContent
+import id.my.gradien.cloud.home.presentation.HomeViewModel
 import id.my.gradien.cloud.login.presentation.LoginScreen
 import id.my.gradien.cloud.login.presentation.LoginViewModel
 import id.my.gradien.cloud.splash.presentation.SplashScreen
-import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.modules.polymorphic
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -42,98 +41,99 @@ fun App(darkTheme: Boolean = false) {
     AppTheme(
         darkTheme = darkTheme
     ) {
-        val config = remember {
-            SavedStateConfiguration {
-                serializersModule = SerializersModule {
-                    polymorphic(NavKey::class) {
-                        subclass(SplashScreen::class, SplashScreen.serializer())
-                        subclass(LoginScreen::class, LoginScreen.serializer())
-                        subclass(HomeScreen::class, HomeScreen.serializer())
-                        subclass(ClustersScreen::class, ClustersScreen.serializer())
-                        subclass(NodeListScreen::class, NodeListScreen.serializer())
-                        subclass(NodeScreen::class, NodeScreen.serializer())
-                        subclass(ProfileScreen::class, ProfileScreen.serializer())
-                    }
-                }
-            }
-        }
+        val navController = rememberNavController()
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentDestination = navBackStackEntry?.destination
 
-        val mainTabs = setOf(HomeScreen, ClustersScreen, NodeListScreen, ProfileScreen)
-        val allTopLevelRoutes = setOf(SplashScreen, LoginScreen) + mainTabs
-
-        val navigationState = rememberNavigationState(
-            configuration = config,
-            startRoute = SplashScreen,
-            topLevelRoutes = allTopLevelRoutes
-        )
-        val navigator = remember { Navigator(navigationState) }
-
-        val entryProvider = entryProvider<Route> {
-            entry<SplashScreen> {
-                SplashScreen(
-                    onNavigate = { navigator.navigate(LoginScreen) }
-                )
-            }
-            entry<LoginScreen> {
-                val viewModel = koinViewModel<LoginViewModel>()
-                val state by viewModel.state.collectAsStateWithLifecycle()
-                LoginScreen(
-                    state = state,
-                    onEvent = viewModel::onEvent,
-                    onNavigate = { navigator.navigate(HomeScreen) }
-                )
-            }
-            entry<HomeScreen> {
-                Surface { Text("Home Screen Content") }
-            }
-            entry<ClustersScreen> {
-                Surface { Text("Clusters Screen Content") }
-            }
-            entry<NodeListScreen> {
-                Surface { Text("Nodes Screen Content") }
-            }
-            entry<ProfileScreen> {
-                Surface { Text("Profile Screen Content") }
-            }
-        }
+        val mainTabs = listOf(RouteHomeScreen, RouteClustersScreen, RouteNodeListScreen, RouteProfileScreen)
+        val isMainTab = mainTabs.any { currentDestination?.hasRoute(it::class) == true }
 
         Scaffold(
+            topBar = {
+                if (isMainTab) {
+                    GradienTopBar(
+                        onAlertClick = { /* TODO */ }
+                    )
+                }
+            },
             bottomBar = {
-                if (navigationState.topLevelRoute in mainTabs) {
+                if (isMainTab) {
                     NavigationBar {
-                        NavigationBarItem(
-                            selected = navigationState.topLevelRoute == HomeScreen,
-                            onClick = { navigator.navigate(HomeScreen) },
-                            icon = { Icon(Icons.Default.Dashboard, contentDescription = "Home") },
-                            label = { Text("Home") }
-                        )
-                        NavigationBarItem(
-                            selected = navigationState.topLevelRoute == ClustersScreen,
-                            onClick = { navigator.navigate(ClustersScreen) },
-                            icon = { Icon(Icons.Default.Hub, contentDescription = "Clusters") },
-                            label = { Text("Clusters") }
-                        )
-                        NavigationBarItem(
-                            selected = navigationState.topLevelRoute == NodeListScreen,
-                            onClick = { navigator.navigate(NodeListScreen) },
-                            icon = { Icon(Icons.Default.Sensors, contentDescription = "Nodes") },
-                            label = { Text("Nodes") }
-                        )
-                        NavigationBarItem(
-                            selected = navigationState.topLevelRoute == ProfileScreen,
-                            onClick = { navigator.navigate(ProfileScreen) },
-                            icon = { Icon(Icons.Default.AccountCircle, contentDescription = "Profile") },
-                            label = { Text("Profile") }
-                        )
+                        mainTabs.forEach { tab ->
+                            val selected = currentDestination?.hasRoute(tab::class) == true
+                            val (icon, label) = when (tab) {
+                                RouteHomeScreen -> Icons.Default.Dashboard to "Home"
+                                RouteClustersScreen -> Icons.Default.Hub to "Clusters"
+                                RouteNodeListScreen -> Icons.Default.Sensors to "Nodes"
+                                RouteProfileScreen -> Icons.Default.AccountCircle to "Profile"
+                                else -> Icons.Default.Dashboard to ""
+                            }
+                            NavigationBarItem(
+                                selected = selected,
+                                onClick = {
+                                    navController.navigate(tab) {
+                                        popUpTo(navController.graph.findStartDestination().displayName) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
+                                },
+                                icon = { Icon(icon, contentDescription = label) },
+                                label = { Text(label) }
+                            )
+                        }
                     }
                 }
             }
         ) { paddingValues ->
-            NavDisplay(
-                modifier = Modifier.padding(paddingValues),
-                entries = navigationState.toEntries(entryProvider),
-                onBack = { navigator.goBack() }
-            )
+            NavHost(
+                navController = navController,
+                startDestination = RouteHomeScreen,
+                modifier = Modifier.padding(paddingValues)
+            ) {
+                composable<RouteSplashScreen> {
+                    SplashScreen(
+                        onNavigate = {
+                            navController.navigate(RouteLoginScreen) {
+                                popUpTo(RouteSplashScreen) { inclusive = true }
+                            }
+                        }
+                    )
+                }
+                composable<RouteLoginScreen> {
+                    val viewModel = koinViewModel<LoginViewModel>()
+                    val state by viewModel.state.collectAsStateWithLifecycle()
+                    LoginScreen(
+                        state = state,
+                        onEvent = viewModel::onEvent,
+                        onNavigate = {
+                            navController.navigate(RouteHomeScreen) {
+                                popUpTo(RouteLoginScreen) { inclusive = true }
+                            }
+                        }
+                    )
+                }
+                composable<RouteHomeScreen> {
+                    val viewModel = koinViewModel<HomeViewModel>()
+                    val state by viewModel.state.collectAsStateWithLifecycle()
+                    HomeScreenContent(state = state)
+                }
+                composable<RouteClustersScreen> {
+                    val viewModel = koinViewModel<ClustersViewModel>()
+                    val state by viewModel.state.collectAsStateWithLifecycle()
+                    ClustersScreen(
+                        state = state,
+                        onToggleExpand = viewModel::toggleExpand
+                    )
+                }
+                composable<RouteNodeListScreen> {
+                    Surface { Text("Nodes Screen Content") }
+                }
+                composable<RouteProfileScreen> {
+                    Surface { Text("Profile Screen Content") }
+                }
+            }
         }
     }
 }
