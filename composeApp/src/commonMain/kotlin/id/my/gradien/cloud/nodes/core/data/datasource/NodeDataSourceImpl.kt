@@ -1,11 +1,11 @@
-package id.my.gradien.cloud.nodes.data.datasource
+package id.my.gradien.cloud.nodes.core.data.datasource
 
 import id.my.gradien.cloud.core.network.utils.DataError
 import id.my.gradien.cloud.core.network.utils.Result
 import id.my.gradien.cloud.core.network.utils.safeCall
-import id.my.gradien.cloud.nodes.data.dto.NodeLogResponse
-import id.my.gradien.cloud.nodes.data.dto.NodeRequest
-import id.my.gradien.cloud.nodes.data.dto.NodeResponse
+import id.my.gradien.cloud.nodes.core.data.dto.NodeLogResponse
+import id.my.gradien.cloud.nodes.core.data.dto.NodeRequest
+import id.my.gradien.cloud.nodes.core.data.dto.NodeResponse
 import io.ktor.client.*
 import io.ktor.client.request.*
 import kotlinx.serialization.json.JsonObject

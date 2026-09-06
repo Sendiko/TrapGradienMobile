@@ -1,14 +1,14 @@
-package id.my.gradien.cloud.nodes.data
+package id.my.gradien.cloud.nodes.core.data
 
 import id.my.gradien.cloud.core.network.utils.DataError
 import id.my.gradien.cloud.core.network.utils.Result
-import id.my.gradien.cloud.nodes.data.datasource.NodeDataSource
-import id.my.gradien.cloud.nodes.data.dto.NodeRequest
-import id.my.gradien.cloud.nodes.data.dto.toSensorDataDomain
-import id.my.gradien.cloud.nodes.domain.NodeRepository
-import id.my.gradien.cloud.nodes.domain.models.Node
-import id.my.gradien.cloud.nodes.domain.models.NodeLog
-import id.my.gradien.cloud.nodes.domain.models.SensorData
+import id.my.gradien.cloud.nodes.core.data.datasource.NodeDataSource
+import id.my.gradien.cloud.nodes.core.data.dto.NodeRequest
+import id.my.gradien.cloud.nodes.core.data.dto.toSensorDataDomain
+import id.my.gradien.cloud.nodes.core.domain.NodeRepository
+import id.my.gradien.cloud.nodes.core.domain.models.Node
+import id.my.gradien.cloud.nodes.core.domain.models.NodeLog
+import id.my.gradien.cloud.nodes.core.domain.models.SensorData
 
 class NodeRepositoryImpl(
     private val dataSource: NodeDataSource

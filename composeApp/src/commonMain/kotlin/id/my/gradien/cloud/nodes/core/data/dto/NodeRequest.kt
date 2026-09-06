@@ -1,4 +1,4 @@
-package id.my.gradien.cloud.nodes.data.dto
+package id.my.gradien.cloud.nodes.core.data.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

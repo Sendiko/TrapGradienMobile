@@ -1,7 +1,7 @@
-package id.my.gradien.cloud.nodes.data.dto
+package id.my.gradien.cloud.nodes.core.data.dto
 
-import id.my.gradien.cloud.nodes.domain.models.NodeIssue
-import id.my.gradien.cloud.nodes.domain.models.NodeLog
+import id.my.gradien.cloud.nodes.core.domain.models.NodeIssue
+import id.my.gradien.cloud.nodes.core.domain.models.NodeLog
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

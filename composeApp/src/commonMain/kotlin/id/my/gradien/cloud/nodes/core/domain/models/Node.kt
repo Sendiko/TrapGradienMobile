@@ -1,4 +1,4 @@
-package id.my.gradien.cloud.nodes.domain.models
+package id.my.gradien.cloud.nodes.core.domain.models
 
 data class Node(
     val id: String,

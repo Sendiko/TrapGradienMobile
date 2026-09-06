@@ -1,10 +1,10 @@
-package id.my.gradien.cloud.nodes.domain
+package id.my.gradien.cloud.nodes.core.domain
 
 import id.my.gradien.cloud.core.network.utils.DataError
 import id.my.gradien.cloud.core.network.utils.Result
-import id.my.gradien.cloud.nodes.domain.models.Node
-import id.my.gradien.cloud.nodes.domain.models.NodeLog
-import id.my.gradien.cloud.nodes.domain.models.SensorData
+import id.my.gradien.cloud.nodes.core.domain.models.Node
+import id.my.gradien.cloud.nodes.core.domain.models.NodeLog
+import id.my.gradien.cloud.nodes.core.domain.models.SensorData
 
 interface NodeRepository {
     suspend fun getNodeDetails(
