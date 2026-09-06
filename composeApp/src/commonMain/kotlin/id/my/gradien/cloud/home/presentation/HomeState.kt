@@ -1,8 +1,8 @@
 package id.my.gradien.cloud.home.presentation
 
-import id.my.gradien.cloud.nodes.domain.models.Node
-import id.my.gradien.cloud.nodes.domain.models.NodeIssue
-import id.my.gradien.cloud.nodes.domain.models.SensorData
+import id.my.gradien.cloud.nodes.core.domain.models.Node
+import id.my.gradien.cloud.nodes.core.domain.models.NodeIssue
+import id.my.gradien.cloud.nodes.core.domain.models.SensorData
 
 data class HomeState(
     val name: String? = null,
