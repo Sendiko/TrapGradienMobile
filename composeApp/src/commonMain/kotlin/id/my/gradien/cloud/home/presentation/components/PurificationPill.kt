@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import id.my.gradien.cloud.nodes.domain.models.Threshold
+import id.my.gradien.cloud.nodes.core.domain.models.Threshold
 
 @Composable
 fun PurificationPill(

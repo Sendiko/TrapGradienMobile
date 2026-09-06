@@ -18,7 +18,7 @@ import trapgradienmobile.composeapp.generated.resources.trapgradien
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GradienTopBar(
+fun TrapGradienTopBar(
     onAlertClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -33,7 +33,8 @@ fun GradienTopBar(
         title = {
             Text(
                 text = stringResource(Res.string.app_name),
-                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.primary
             )
         },
         actions = {

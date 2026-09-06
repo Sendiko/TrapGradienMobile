@@ -8,7 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import id.my.gradien.cloud.nodes.domain.models.NodeIssue
+import id.my.gradien.cloud.nodes.core.domain.models.NodeIssue
 
 @Composable
 fun AlertItem(
