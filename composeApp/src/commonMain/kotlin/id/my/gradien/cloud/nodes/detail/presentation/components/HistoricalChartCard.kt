@@ -14,6 +14,10 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.jetbrains.compose.resources.stringResource
+import trapgradienmobile.composeapp.generated.resources.Res
+import trapgradienmobile.composeapp.generated.resources.pm25_historical_data_title
+import trapgradienmobile.composeapp.generated.resources.ug_m3_unit
 import id.my.gradien.cloud.nodes.detail.presentation.TimeRange
 
 @Composable
@@ -44,7 +48,7 @@ fun HistoricalChartCard(
             ) {
                 Column {
                     Text(
-                        text = "PM2.5 HISTORICAL DATA",
+                        text = stringResource(Res.string.pm25_historical_data_title),
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 1.sp
@@ -62,7 +66,7 @@ fun HistoricalChartCard(
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = "µg/m³",
+                            text = stringResource(Res.string.ug_m3_unit),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -91,7 +95,7 @@ fun HistoricalChartCard(
                                 shadowElevation = if (isSelected) 1.dp else 0.dp
                             ) {
                                 Text(
-                                    text = range.label,
+                                    text = stringResource(range.label),
                                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
                                     style = MaterialTheme.typography.labelMedium.copy(
                                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium

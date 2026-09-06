@@ -1,10 +1,17 @@
 package id.my.gradien.cloud.nodes.detail.presentation
 
-enum class TimeRange(val label: String) {
-    H1("1H"),
-    H6("6H"),
-    D1("1D"),
-    W1("1W")
+import org.jetbrains.compose.resources.StringResource
+import trapgradienmobile.composeapp.generated.resources.Res
+import trapgradienmobile.composeapp.generated.resources.time_range_1d
+import trapgradienmobile.composeapp.generated.resources.time_range_1h
+import trapgradienmobile.composeapp.generated.resources.time_range_1w
+import trapgradienmobile.composeapp.generated.resources.time_range_6h
+
+enum class TimeRange(val label: StringResource) {
+    H1(Res.string.time_range_1h),
+    H6(Res.string.time_range_6h),
+    D1(Res.string.time_range_1d),
+    W1(Res.string.time_range_1w)
 }
 
 data class NodeDetailState(

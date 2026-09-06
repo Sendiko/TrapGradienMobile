@@ -25,6 +25,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
+import trapgradienmobile.composeapp.generated.resources.Res
+import trapgradienmobile.composeapp.generated.resources.avg_aqi_label
+import trapgradienmobile.composeapp.generated.resources.cluster_id_label
+import trapgradienmobile.composeapp.generated.resources.nodes_active_status
+import trapgradienmobile.composeapp.generated.resources.nodes_label
+import trapgradienmobile.composeapp.generated.resources.nodes_offline_status
 import id.my.gradien.cloud.clusters.presentation.models.ClusterUiModel
 import id.my.gradien.cloud.clusters.presentation.models.NodeStatus
 
@@ -60,7 +67,7 @@ fun ClusterCard(
                         color = MaterialTheme.colorScheme.primary
                     )
                     Text(
-                        text = "ID: ${clusterUi.cluster.clusterId.uppercase()}",
+                        text = stringResource(Res.string.cluster_id_label, clusterUi.cluster.clusterId.uppercase()),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -79,15 +86,16 @@ fun ClusterCard(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Summary Info
             Row(modifier = Modifier.fillMaxWidth()) {
+                val nodesValue = stringResource(Res.string.nodes_active_status, clusterUi.activeNodes) +
+                        if (clusterUi.offlineNodes > 0) stringResource(Res.string.nodes_offline_status, clusterUi.offlineNodes) else ""
                 SummaryField(
-                    label = "Nodes",
-                    value = "${clusterUi.activeNodes} Active" + if (clusterUi.offlineNodes > 0) ", ${clusterUi.offlineNodes} Offline" else "",
+                    label = stringResource(Res.string.nodes_label),
+                    value = nodesValue,
                     modifier = Modifier.weight(1f)
                 )
                 SummaryField(
-                    label = "Avg AQI",
+                    label = stringResource(Res.string.avg_aqi_label),
                     value = "${clusterUi.averageAqi} (${clusterUi.aqiStatus})",
                     valueColor = if (isAlert) MaterialTheme.colorScheme.error else Color(0xFF275022),
                     modifier = Modifier.weight(1f)

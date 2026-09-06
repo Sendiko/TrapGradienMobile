@@ -12,6 +12,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+import org.jetbrains.compose.resources.stringResource
+import trapgradienmobile.composeapp.generated.resources.Res
+import trapgradienmobile.composeapp.generated.resources.fan_speed_label
+import trapgradienmobile.composeapp.generated.resources.fan_speed_title
+import trapgradienmobile.composeapp.generated.resources.level_label
+
 @Composable
 fun FanSpeedCard(
     currentSpeed: Int,
@@ -38,12 +44,12 @@ fun FanSpeedCard(
                 ) {
                     Icon(
                         imageVector = Icons.Default.ModeFanOff,
-                        contentDescription = "Fan Speed",
+                        contentDescription = stringResource(Res.string.fan_speed_label),
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(28.dp)
                     )
                     Text(
-                        text = "Level $currentSpeed",
+                        text = stringResource(Res.string.level_label, currentSpeed),
                         style = MaterialTheme.typography.labelLarge.copy(
                             fontWeight = FontWeight.Bold
                         ),
@@ -53,7 +59,7 @@ fun FanSpeedCard(
 
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "FAN SPEED",
+                    text = stringResource(Res.string.fan_speed_title),
                     style = MaterialTheme.typography.labelSmall.copy(
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 1.sp

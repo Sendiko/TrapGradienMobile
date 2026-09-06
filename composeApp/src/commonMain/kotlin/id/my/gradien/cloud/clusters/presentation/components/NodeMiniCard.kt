@@ -21,6 +21,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
+import trapgradienmobile.composeapp.generated.resources.Res
+import trapgradienmobile.composeapp.generated.resources.node_maintenance_required
 import id.my.gradien.cloud.clusters.presentation.models.NodeItemUiModel
 import id.my.gradien.cloud.clusters.presentation.models.NodeStatus
 
@@ -46,7 +49,7 @@ fun NodeMiniCard(nodeItem: NodeItemUiModel) {
             )
             Spacer(modifier = Modifier.width(16.dp))
             Text(
-                text = if (isMaintenance) "${nodeItem.node.name} - Maintenance Required" else nodeItem.node.name,
+                text = if (isMaintenance) stringResource(Res.string.node_maintenance_required, nodeItem.node.name) else nodeItem.node.name,
                 style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                 color = contentColor,
                 modifier = Modifier.weight(1f)

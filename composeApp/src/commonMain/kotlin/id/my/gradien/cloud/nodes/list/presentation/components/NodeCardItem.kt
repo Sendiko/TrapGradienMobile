@@ -17,6 +17,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.jetbrains.compose.resources.stringResource
+import trapgradienmobile.composeapp.generated.resources.Res
+import trapgradienmobile.composeapp.generated.resources.aqi_label
+import trapgradienmobile.composeapp.generated.resources.battery_label
+import trapgradienmobile.composeapp.generated.resources.percent_format
+import trapgradienmobile.composeapp.generated.resources.status_alert
+import trapgradienmobile.composeapp.generated.resources.status_not_available
+import trapgradienmobile.composeapp.generated.resources.status_offline
+import trapgradienmobile.composeapp.generated.resources.status_online
 import id.my.gradien.cloud.nodes.list.presentation.models.NodeItemUi
 import id.my.gradien.cloud.nodes.list.presentation.models.NodeStatusUi
 
@@ -31,19 +40,19 @@ fun NodeCardItem(
             Color(0xFF526442),
             Color(0xFFD2E6BC).copy(alpha = 0.4f),
             Color(0xFF275022),
-            "ONLINE"
+            stringResource(Res.string.status_online).uppercase()
         )
         NodeStatusUi.OFFLINE -> Quadruple(
             Color(0xFF72796E),
             Color(0xFFE1E3E2).copy(alpha = 0.6f),
             Color(0xFF42493F),
-            "OFFLINE"
+            stringResource(Res.string.status_offline).uppercase()
         )
         NodeStatusUi.ALERT -> Quadruple(
             Color(0xFFBA1A1A),
             Color(0xFFFFDAD6),
             Color(0xFF93000A),
-            "ALERT"
+            stringResource(Res.string.status_alert).uppercase()
         )
     }
 
@@ -148,9 +157,9 @@ fun NodeCardItem(
                 ) {
                     // AQI Metric Container
                     MetricTile(
-                        label = "AQI",
+                        label = stringResource(Res.string.aqi_label),
                         value = node.aqi?.toString() ?: "--",
-                        subtitle = node.aqiLabel ?: (if (node.status == NodeStatusUi.OFFLINE) "Offline" else "N/A"),
+                        subtitle = node.aqiLabel ?: (if (node.status == NodeStatusUi.OFFLINE) stringResource(Res.string.status_offline) else stringResource(Res.string.status_not_available)),
                         isAlert = node.status == NodeStatusUi.ALERT,
                         modifier = Modifier.weight(1f)
                     )
@@ -165,8 +174,8 @@ fun NodeCardItem(
                     }
 
                     MetricTile(
-                        label = "BATTERY",
-                        value = if (node.batteryPercent != null) "${node.batteryPercent}%" else "--",
+                        label = stringResource(Res.string.battery_label),
+                        value = if (node.batteryPercent != null) stringResource(Res.string.percent_format, node.batteryPercent) else "--",
                         trailingIcon = batteryIcon,
                         isAlert = false,
                         modifier = Modifier.weight(1f)

@@ -30,6 +30,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
+import trapgradienmobile.composeapp.generated.resources.Res
+import trapgradienmobile.composeapp.generated.resources.active_alerts_title
+import trapgradienmobile.composeapp.generated.resources.all_systems_operational
+import trapgradienmobile.composeapp.generated.resources.current_air_quality_title
+import trapgradienmobile.composeapp.generated.resources.maximum_subtitle
 import id.my.gradien.cloud.core.ui.components.TrapGradienTopBar
 import id.my.gradien.cloud.core.ui.theme.AppTheme
 import id.my.gradien.cloud.home.presentation.components.AirQualityGauge
@@ -99,8 +105,8 @@ fun HomeScreen(
                                 AirQualityGauge(
                                     value = field1Value,
                                     maxValue = field1Config?.scale?.max?.toFloatOrNull() ?: 100f,
-                                    title = field1Config?.title ?: "Current Air Quality",
-                                    subtitle = "Maximum"
+                                    title = field1Config?.title ?: stringResource(Res.string.current_air_quality_title),
+                                    subtitle = stringResource(Res.string.maximum_subtitle)
                                 )
 
                                 Spacer(modifier = Modifier.height(24.dp))
@@ -146,7 +152,7 @@ fun HomeScreen(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "Active Alerts",
+                            text = stringResource(Res.string.active_alerts_title),
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                             color = MaterialTheme.colorScheme.error
                         )
@@ -169,7 +175,7 @@ fun HomeScreen(
                             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
                         ) {
                             Box(modifier = Modifier.padding(16.dp)) {
-                                Text(text = "All systems operational. No active alerts.")
+                                Text(text = stringResource(Res.string.all_systems_operational))
                             }
                         }
                     }

@@ -12,6 +12,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+import org.jetbrains.compose.resources.stringResource
+import trapgradienmobile.composeapp.generated.resources.Res
+import trapgradienmobile.composeapp.generated.resources.ionizer_label
+import trapgradienmobile.composeapp.generated.resources.ionizer_mode_title
+import trapgradienmobile.composeapp.generated.resources.mode_auto
+import trapgradienmobile.composeapp.generated.resources.mode_boost
+
 @Composable
 fun IonizerControlCard(
     isIonizerOn: Boolean,
@@ -40,13 +47,13 @@ fun IonizerControlCard(
                 Column {
                     Icon(
                         imageVector = Icons.Default.BlurOn,
-                        contentDescription = "Ionizer",
+                        contentDescription = stringResource(Res.string.ionizer_label),
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(28.dp)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "IONIZER MODE",
+                        text = stringResource(Res.string.ionizer_mode_title),
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 1.sp
@@ -69,7 +76,10 @@ fun IonizerControlCard(
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                listOf("Auto", "Boost").forEach { mode ->
+                listOf(
+                    "Auto" to Res.string.mode_auto,
+                    "Boost" to Res.string.mode_boost
+                ).forEach { (mode, res) ->
                     val isSelected = mode.equals(selectedMode, ignoreCase = true)
                     Surface(
                         onClick = { onModeSelect(mode) },
@@ -81,7 +91,7 @@ fun IonizerControlCard(
                         }
                     ) {
                         Text(
-                            text = mode,
+                            text = stringResource(res),
                             modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
                             style = MaterialTheme.typography.labelMedium.copy(
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal

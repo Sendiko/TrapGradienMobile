@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import trapgradienmobile.composeapp.generated.resources.Res
+import trapgradienmobile.composeapp.generated.resources.alerts_description
 import trapgradienmobile.composeapp.generated.resources.app_name
 import trapgradienmobile.composeapp.generated.resources.trapgradien
 
@@ -41,7 +42,7 @@ fun TrapGradienTopBar(
             IconButton(onClick = onAlertClick) {
                 Icon(
                     imageVector = Icons.Default.Notifications,
-                    contentDescription = "Alerts"
+                    contentDescription = stringResource(Res.string.alerts_description)
                 )
             }
         },

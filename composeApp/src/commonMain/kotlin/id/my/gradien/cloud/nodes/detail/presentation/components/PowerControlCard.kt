@@ -12,6 +12,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+import org.jetbrains.compose.resources.stringResource
+import trapgradienmobile.composeapp.generated.resources.Res
+import trapgradienmobile.composeapp.generated.resources.main_power_title
+import trapgradienmobile.composeapp.generated.resources.power_label
+import trapgradienmobile.composeapp.generated.resources.power_off_status
+import trapgradienmobile.composeapp.generated.resources.power_on_status
+
 @Composable
 fun PowerControlCard(
     isPowerOn: Boolean,
@@ -38,13 +45,13 @@ fun PowerControlCard(
                 Column {
                     Icon(
                         imageVector = Icons.Default.PowerSettingsNew,
-                        contentDescription = "Power",
+                        contentDescription = stringResource(Res.string.power_label),
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(28.dp)
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "MAIN POWER",
+                        text = stringResource(Res.string.main_power_title),
                         style = MaterialTheme.typography.labelSmall.copy(
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 1.sp
@@ -64,7 +71,7 @@ fun PowerControlCard(
             }
 
             Text(
-                text = if (isPowerOn) "Currently drawing 15W. Last restarted 4d ago." else "Device is powered off.",
+                text = if (isPowerOn) stringResource(Res.string.power_on_status) else stringResource(Res.string.power_off_status),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

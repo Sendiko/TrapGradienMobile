@@ -26,6 +26,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
+import trapgradienmobile.composeapp.generated.resources.Res
+import trapgradienmobile.composeapp.generated.resources.cluster_management_subtitle
+import trapgradienmobile.composeapp.generated.resources.cluster_management_title
+import trapgradienmobile.composeapp.generated.resources.no_clusters_message
 import id.my.gradien.cloud.clusters.domain.models.Cluster
 import id.my.gradien.cloud.clusters.presentation.components.ClusterCard
 import id.my.gradien.cloud.clusters.presentation.models.ClusterUiModel
@@ -76,13 +81,13 @@ fun ClustersScreen(
                 item {
                     Column(modifier = Modifier.padding(bottom = 8.dp)) {
                         Text(
-                            text = "Cluster Management",
+                            text = stringResource(Res.string.cluster_management_title),
                             style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
                             color = MaterialTheme.colorScheme.primary
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "Monitor and manage stationary telemetry clusters.",
+                            text = stringResource(Res.string.cluster_management_subtitle),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -105,7 +110,7 @@ fun ClustersScreen(
                             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
                         ) {
                             Box(modifier = Modifier.padding(16.dp)) {
-                                Text(text = "No clusters assigned to your account.")
+                                Text(text = stringResource(Res.string.no_clusters_message))
                             }
                         }
                     }

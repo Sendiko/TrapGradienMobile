@@ -20,6 +20,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
+import trapgradienmobile.composeapp.generated.resources.Res
+import trapgradienmobile.composeapp.generated.resources.no_nodes_found
 import id.my.gradien.cloud.core.navigation.NodeScreen
 import id.my.gradien.cloud.core.ui.theme.AppTheme
 import id.my.gradien.cloud.nodes.list.presentation.components.NodeCardItem
@@ -87,7 +90,7 @@ fun NodeListScreen(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = "No nodes found matching criteria.",
+                                text = stringResource(Res.string.no_nodes_found),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )

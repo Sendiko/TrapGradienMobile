@@ -22,6 +22,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 
+import org.jetbrains.compose.resources.stringResource
+import trapgradienmobile.composeapp.generated.resources.Res
+import trapgradienmobile.composeapp.generated.resources.status_alert
+import trapgradienmobile.composeapp.generated.resources.status_online
+
 @Composable
 fun StatusChip(isAlert: Boolean) {
     val containerColor = if (isAlert) Color(0xFFFFDAD6) else Color(0xFF3E6837)
@@ -42,7 +47,7 @@ fun StatusChip(isAlert: Boolean) {
         )
         Spacer(modifier = Modifier.width(6.dp))
         Text(
-            text = if (isAlert) "Alert" else "Online",
+            text = if (isAlert) stringResource(Res.string.status_alert) else stringResource(Res.string.status_online),
             style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
             color = contentColor
         )

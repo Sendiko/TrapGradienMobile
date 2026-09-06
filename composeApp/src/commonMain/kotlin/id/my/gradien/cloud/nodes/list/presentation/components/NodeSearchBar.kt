@@ -13,6 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 
+import org.jetbrains.compose.resources.stringResource
+import trapgradienmobile.composeapp.generated.resources.Res
+import trapgradienmobile.composeapp.generated.resources.clear_search_description
+import trapgradienmobile.composeapp.generated.resources.search_description
+import trapgradienmobile.composeapp.generated.resources.search_nodes_placeholder
+
 @Composable
 fun NodeSearchBar(
     query: String,
@@ -25,7 +31,7 @@ fun NodeSearchBar(
         modifier = modifier.fillMaxWidth(),
         placeholder = {
             Text(
-                text = "Search nodes by ID or location...",
+                text = stringResource(Res.string.search_nodes_placeholder),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.outline
             )
@@ -33,7 +39,7 @@ fun NodeSearchBar(
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,
-                contentDescription = "Search",
+                contentDescription = stringResource(Res.string.search_description),
                 tint = MaterialTheme.colorScheme.outline
             )
         },
@@ -42,7 +48,7 @@ fun NodeSearchBar(
                 IconButton(onClick = { onQueryChange("") }) {
                     Icon(
                         imageVector = Icons.Default.Close,
-                        contentDescription = "Clear search",
+                        contentDescription = stringResource(Res.string.clear_search_description),
                         tint = MaterialTheme.colorScheme.outline
                     )
                 }

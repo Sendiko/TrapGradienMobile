@@ -8,6 +8,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
+import trapgradienmobile.composeapp.generated.resources.Res
+import trapgradienmobile.composeapp.generated.resources.acknowledge_button
+import trapgradienmobile.composeapp.generated.resources.alert_item_status
 import id.my.gradien.cloud.nodes.core.domain.models.NodeIssue
 
 @Composable
@@ -34,7 +38,7 @@ fun AlertItem(
                     color = MaterialTheme.colorScheme.error
                 )
                 Text(
-                    text = "${issue.time} • ${issue.status}",
+                    text = stringResource(Res.string.alert_item_status, issue.time, issue.status),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -46,7 +50,7 @@ fun AlertItem(
                 ),
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
             ) {
-                Text(text = "Acknowledge", style = MaterialTheme.typography.labelLarge)
+                Text(text = stringResource(Res.string.acknowledge_button), style = MaterialTheme.typography.labelLarge)
             }
         }
     }

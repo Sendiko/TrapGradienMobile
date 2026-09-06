@@ -8,6 +8,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
+import trapgradienmobile.composeapp.generated.resources.Res
+import trapgradienmobile.composeapp.generated.resources.device_controls_title
+import trapgradienmobile.composeapp.generated.resources.status_offline
+import trapgradienmobile.composeapp.generated.resources.status_online
 import id.my.gradien.cloud.core.ui.theme.AppTheme
 import id.my.gradien.cloud.nodes.detail.presentation.components.*
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -36,11 +41,10 @@ fun NodeDetailScreen(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                // Header Section
                 item {
                     NodeHeader(
                         title = state.nodeName,
-                        subtitle = "${state.location} • ${if (state.isOnline) "Online" else "Offline"}",
+                        subtitle = "${state.location} • ${if (state.isOnline) stringResource(Res.string.status_online) else stringResource(Res.string.status_offline)}",
                         badgeText = state.statusBadge,
                         onBackClick = {
                             onNavigateBack()
@@ -61,7 +65,7 @@ fun NodeDetailScreen(
                 // Section Header: Device Controls
                 item {
                     Text(
-                        text = "Device Controls",
+                        text = stringResource(Res.string.device_controls_title),
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.Bold
                         ),

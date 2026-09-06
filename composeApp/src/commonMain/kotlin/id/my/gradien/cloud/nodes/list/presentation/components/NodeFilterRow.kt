@@ -13,6 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
+import trapgradienmobile.composeapp.generated.resources.Res
+import trapgradienmobile.composeapp.generated.resources.alerts_description
+import trapgradienmobile.composeapp.generated.resources.filter_all_nodes
+import trapgradienmobile.composeapp.generated.resources.status_offline
+import trapgradienmobile.composeapp.generated.resources.status_online
 import id.my.gradien.cloud.nodes.list.presentation.models.NodeFilter
 
 @Composable
@@ -29,10 +35,10 @@ fun NodeFilterRow(
         items(NodeFilter.entries) { filter ->
             val isSelected = filter == selectedFilter
             val (dotColor, chipText) = when (filter) {
-                NodeFilter.ALL -> MaterialTheme.colorScheme.primary to "All Nodes"
-                NodeFilter.ONLINE -> MaterialTheme.colorScheme.secondary to "Online"
-                NodeFilter.OFFLINE -> MaterialTheme.colorScheme.outline to "Offline"
-                NodeFilter.ALERTS -> MaterialTheme.colorScheme.error to "Alerts"
+                NodeFilter.ALL -> MaterialTheme.colorScheme.primary to stringResource(Res.string.filter_all_nodes)
+                NodeFilter.ONLINE -> MaterialTheme.colorScheme.secondary to stringResource(Res.string.status_online)
+                NodeFilter.OFFLINE -> MaterialTheme.colorScheme.outline to stringResource(Res.string.status_offline)
+                NodeFilter.ALERTS -> MaterialTheme.colorScheme.error to stringResource(Res.string.alerts_description)
             }
 
             Surface(
