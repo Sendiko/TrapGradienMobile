@@ -26,6 +26,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -39,6 +40,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import trapgradienmobile.composeapp.generated.resources.Res
 import trapgradienmobile.composeapp.generated.resources.email_address_label
 import trapgradienmobile.composeapp.generated.resources.email_placeholder
+import trapgradienmobile.composeapp.generated.resources.loading
 import trapgradienmobile.composeapp.generated.resources.login_button
 import trapgradienmobile.composeapp.generated.resources.login_subtitle
 import trapgradienmobile.composeapp.generated.resources.logo_description
@@ -53,6 +55,11 @@ fun LoginScreen(
     onEvent: (LoginEvent) -> Unit,
     onNavigate: () -> Unit
 ) {
+
+    LaunchedEffect(state.isSuccess) {
+        onNavigate()
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background
@@ -117,6 +124,7 @@ fun LoginScreen(
                             value = state.email,
                             onValueChange = { onEvent(LoginEvent.OnEmailChanged(it)) },
                             modifier = Modifier.fillMaxWidth(),
+                            enabled = !state.isLoading,
                             placeholder = { Text(stringResource(Res.string.email_placeholder)) },
                             leadingIcon = {
                                 Icon(
@@ -144,6 +152,7 @@ fun LoginScreen(
                             value = state.password,
                             onValueChange = { onEvent(LoginEvent.OnPasswordChanged(it)) },
                             modifier = Modifier.fillMaxWidth(),
+                            enabled = !state.isLoading,
                             placeholder = { Text(stringResource(Res.string.password_placeholder)) },
                             leadingIcon = {
                                 Icon(
@@ -176,10 +185,11 @@ fun LoginScreen(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primaryContainer,
                             contentColor = MaterialTheme.colorScheme.onPrimary
-                        )
+                        ),
+                        enabled = !state.isLoading
                     ) {
                         Text(
-                            text = stringResource(Res.string.login_button),
+                            text = if (state.isLoading) stringResource(Res.string.loading) else stringResource(Res.string.login_button),
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Bold
                         )

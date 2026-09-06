@@ -22,7 +22,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
@@ -31,7 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import id.my.gradien.cloud.core.ui.components.GradienTopBar
+import id.my.gradien.cloud.core.ui.components.TrapGradienTopBar
 import id.my.gradien.cloud.core.ui.theme.AppTheme
 import id.my.gradien.cloud.home.presentation.components.AirQualityGauge
 import id.my.gradien.cloud.home.presentation.components.AlertItem
@@ -48,7 +47,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreenContent(
+fun HomeScreen(
     state: HomeState,
     onEvent: (HomeEvent) -> Unit,
     modifier: Modifier = Modifier
@@ -58,111 +57,129 @@ fun HomeScreenContent(
         onEvent(HomeEvent.OnLoadData)
     }
 
-    PullToRefreshBox(
-        isRefreshing = state.isLoadingAlerts || state.isLoadingNodeData,
-        onRefresh = { onEvent(HomeEvent.OnRefresh) },
-        modifier = modifier.fillMaxSize()
+    Scaffold(
+        topBar = {
+            TrapGradienTopBar(
+                onAlertClick = { /* TODO */ }
+            )
+        }
     ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+        PullToRefreshBox(
+            isRefreshing = state.isLoadingAlerts || state.isLoadingNodeData,
+            onRefresh = { onEvent(HomeEvent.OnRefresh) },
+            modifier = modifier.fillMaxSize()
         ) {
-            /* Dashboard Section */
-            state.primaryNode?.let { node ->
-                item {
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(24.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(
+                    top = it.calculateTopPadding() + 16.dp,
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 16.dp
+                ),
+                verticalArrangement = Arrangement.spacedBy(24.dp)
+            ) {
+                /* Dashboard Section */
+                state.primaryNode?.let { node ->
+                    item {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                         ) {
-                            val field1Config = node.config["field1"]
-                            val field1Value =
-                                state.latestSensorData?.fields?.get("field1")?.toFloatOrNull() ?: 0f
+                            Column(
+                                modifier = Modifier.padding(24.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                val field1Config = node.config["field1"]
+                                val field1Value =
+                                    state.latestSensorData?.fields?.get("field1")?.toFloatOrNull()
+                                        ?: 0f
 
-                            AirQualityGauge(
-                                value = field1Value,
-                                maxValue = field1Config?.scale?.max?.toFloatOrNull() ?: 100f,
-                                title = field1Config?.title ?: "Current Air Quality",
-                                subtitle = "Maximum"
-                            )
+                                AirQualityGauge(
+                                    value = field1Value,
+                                    maxValue = field1Config?.scale?.max?.toFloatOrNull() ?: 100f,
+                                    title = field1Config?.title ?: "Current Air Quality",
+                                    subtitle = "Maximum"
+                                )
 
-                            Spacer(modifier = Modifier.height(24.dp))
+                                Spacer(modifier = Modifier.height(24.dp))
 
-                            val threshold = field1Config?.thresholds?.find {
-                                val from = it.from.toFloatOrNull() ?: 0f
-                                val to = it.to.toFloatOrNull() ?: 0f
-                                field1Value >= from && field1Value <= to
+                                val threshold = field1Config?.thresholds?.find {
+                                    val from = it.from.toFloatOrNull() ?: 0f
+                                    val to = it.to.toFloatOrNull() ?: 0f
+                                    field1Value >= from && field1Value <= to
+                                }
+
+                                threshold?.let {
+                                    PurificationPill(threshold = it)
+                                }
+                            }
+                        }
+                    }
+
+                    /* Telemetry Grid */
+                    item {
+                        val telemetryItems = node.config.filterKeys { it != "field1" }
+                            .mapNotNull { (key, config) ->
+                                val value =
+                                    state.latestSensorData?.fields?.get(key)
+                                        ?: return@mapNotNull null
+                                TelemetryItem(
+                                    label = config.title,
+                                    value = value,
+                                    unit = config.yaxis
+                                )
                             }
 
-                            threshold?.let {
-                                PurificationPill(threshold = it)
+                        TelemetryGrid(items = telemetryItems)
+                    }
+                }
+
+                /* Alerts Section */
+                item {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.Warning,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.error
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = "Active Alerts",
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+
+                if (state.isLoadingAlerts) {
+                    item {
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+                } else if (state.alerts.isEmpty()) {
+                    item {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                        ) {
+                            Box(modifier = Modifier.padding(16.dp)) {
+                                Text(text = "All systems operational. No active alerts.")
                             }
                         }
                     }
-                }
-
-                /* Telemetry Grid */
-                item {
-                    val telemetryItems = node.config.filterKeys { it != "field1" }
-                        .mapNotNull { (key, config) ->
-                            val value =
-                                state.latestSensorData?.fields?.get(key) ?: return@mapNotNull null
-                            TelemetryItem(
-                                label = config.title,
-                                value = value,
-                                unit = config.yaxis
-                            )
-                        }
-
-                    TelemetryGrid(items = telemetryItems)
-                }
-            }
-
-            /* Alerts Section */
-            item {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.Warning,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.error
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Active Alerts",
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                        color = MaterialTheme.colorScheme.error
-                    )
-                }
-            }
-
-            if (state.isLoadingAlerts) {
-                item {
-                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator()
+                } else {
+                    items(state.alerts) { issue ->
+                        AlertItem(
+                            issue = issue,
+                            onAcknowledge = { /* TODO */ }
+                        )
                     }
-                }
-            } else if (state.alerts.isEmpty()) {
-                item {
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
-                    ) {
-                        Box(modifier = Modifier.padding(16.dp)) {
-                            Text(text = "All systems operational. No active alerts.")
-                        }
-                    }
-                }
-            } else {
-                items(state.alerts) { issue ->
-                    AlertItem(
-                        issue = issue,
-                        onAcknowledge = { /* TODO */ }
-                    )
                 }
             }
         }
@@ -247,19 +264,9 @@ private fun HomeScreenFullPreview() {
                 )
             )
         )
-        Scaffold(
-            topBar = {
-                GradienTopBar(
-                    onAlertClick = {}
-                )
-            }
-        ) { padding ->
-            Surface(modifier = Modifier.padding(padding)) {
-                HomeScreenContent(
-                    state = state,
-                    onEvent = {  }
-                )
-            }
-        }
+        HomeScreen(
+            state = state,
+            onEvent = { }
+        )
     }
 }

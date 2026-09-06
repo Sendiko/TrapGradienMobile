@@ -7,10 +7,12 @@ import id.my.gradien.cloud.core.network.utils.onSuccess
 import id.my.gradien.cloud.core.session.SessionManager
 import id.my.gradien.cloud.core.ui.utils.asUiText
 import id.my.gradien.cloud.login.domain.LoginRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.seconds
 
 class LoginViewModel(
     private val repository: LoginRepository,
@@ -33,7 +35,8 @@ class LoginViewModel(
     private fun login() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
-            repository.login(
+            /* commented due to API error. */
+            /* repository.login(
                 email = state.value.email,
                 password = state.value.password
             )
@@ -50,6 +53,9 @@ class LoginViewModel(
                 .onError { error ->
                     _state.update { it.copy(isError = true, isLoading = false, message = error.asUiText()) }
                 }
+             */
+            delay(2.seconds)
+            _state.update { it.copy(isLoading = false, isSuccess = true) }
         }
     }
 

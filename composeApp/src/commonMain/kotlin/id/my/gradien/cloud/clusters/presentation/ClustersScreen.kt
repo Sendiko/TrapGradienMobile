@@ -16,6 +16,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -29,6 +30,7 @@ import id.my.gradien.cloud.clusters.domain.models.Cluster
 import id.my.gradien.cloud.clusters.presentation.components.ClusterCard
 import id.my.gradien.cloud.clusters.presentation.models.ClusterUiModel
 import id.my.gradien.cloud.clusters.presentation.models.NodeItemUiModel
+import id.my.gradien.cloud.core.ui.components.TrapGradienTopBar
 import id.my.gradien.cloud.core.ui.theme.AppTheme
 import id.my.gradien.cloud.nodes.core.domain.models.Node
 import id.my.gradien.cloud.nodes.core.domain.models.NodeIssue
@@ -49,62 +51,76 @@ fun ClustersScreen(
             onEvent(ClustersEvent.OnLoadData)
     }
 
-    PullToRefreshBox(
-        isRefreshing = state.isLoading,
-        onRefresh = { onEvent(ClustersEvent.OnLoadData) },
-        modifier = modifier.fillMaxSize()
+    Scaffold(
+        topBar = {
+            TrapGradienTopBar(
+                onAlertClick = { /* TODO */ }
+            )
+        }
     ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+        PullToRefreshBox(
+            isRefreshing = state.isLoading,
+            onRefresh = { onEvent(ClustersEvent.OnLoadData) },
+            modifier = modifier.fillMaxSize()
         ) {
-            item {
-                Column(modifier = Modifier.padding(bottom = 8.dp)) {
-                    Text(
-                        text = "Cluster Management",
-                        style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "Monitor and manage stationary telemetry clusters.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-
-            if (state.isLoading) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(
+                    top = it.calculateTopPadding() + 16.dp,
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 16.dp
+                ),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+            ) {
                 item {
-                    Box(
-                        modifier = Modifier.fillMaxWidth().padding(32.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
+                    Column(modifier = Modifier.padding(bottom = 8.dp)) {
+                        Text(
+                            text = "Cluster Management",
+                            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "Monitor and manage stationary telemetry clusters.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     }
                 }
-            } else if (state.clusters.isEmpty()) {
-                item {
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
-                    ) {
-                        Box(modifier = Modifier.padding(16.dp)) {
-                            Text(text = "No clusters assigned to your account.")
+
+                if (state.isLoading) {
+                    item {
+                        Box(
+                            modifier = Modifier.fillMaxWidth().padding(32.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
                         }
                     }
-                }
-            } else {
-                items(state.clusters) { clusterUi ->
-                    ClusterCard(
-                        clusterUi = clusterUi,
-                        onToggleExpand = { onEvent(ClustersEvent.OnClusterExpand(clusterUi)) }
-                    )
+                } else if (state.clusters.isEmpty()) {
+                    item {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                        ) {
+                            Box(modifier = Modifier.padding(16.dp)) {
+                                Text(text = "No clusters assigned to your account.")
+                            }
+                        }
+                    }
+                } else {
+                    items(state.clusters) { clusterUi ->
+                        ClusterCard(
+                            clusterUi = clusterUi,
+                            onToggleExpand = { onEvent(ClustersEvent.OnClusterExpand(clusterUi)) }
+                        )
+                    }
                 }
             }
         }
     }
+
 }
 
 @Preview
