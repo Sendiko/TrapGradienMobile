@@ -1,6 +1,6 @@
-package id.my.gradien.cloud.nodes.data.dto
+package id.my.gradien.cloud.nodes.core.data.dto
 
-import id.my.gradien.cloud.nodes.domain.models.SensorData
+import id.my.gradien.cloud.nodes.core.domain.models.SensorData
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
