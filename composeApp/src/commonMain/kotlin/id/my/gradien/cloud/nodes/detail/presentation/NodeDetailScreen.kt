@@ -43,7 +43,6 @@ fun NodeDetailScreen(
                         subtitle = "${state.location} • ${if (state.isOnline) "Online" else "Offline"}",
                         badgeText = state.statusBadge,
                         onBackClick = {
-                            onEvent(NodeDetailEvent.OnBackClicked)
                             onNavigateBack()
                         }
                     )
