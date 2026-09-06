@@ -8,6 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import id.my.gradien.cloud.core.App
 import id.my.gradien.cloud.core.ui.theme.isSystemInDarkTheme
+import id.my.gradien.cloud.core.di.sharedModules
+import org.koin.compose.KoinApplication
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +27,11 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 fun AppAndroidPreview() {
-    App(
-        darkTheme = isSystemInDarkTheme()
-    )
+    KoinApplication(application = {
+        modules(sharedModules)
+    }) {
+        App(
+            darkTheme = isSystemInDarkTheme()
+        )
+    }
 }

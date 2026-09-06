@@ -3,16 +3,25 @@ package id.my.gradien.cloud.core.navigation
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object SplashScreen
+sealed class Route
 
 @Serializable
-data object LoginScreen
+data object SplashScreen : Route()
 
 @Serializable
-data object HomeScreen
+data object LoginScreen : Route()
 
 @Serializable
-data class NodeScreen(val id: String, val key: String)
+data object HomeScreen : Route()
 
 @Serializable
-data object NodeListScreen
+data object ClustersScreen : Route()
+
+@Serializable
+data object NodeListScreen : Route()
+
+@Serializable
+data class NodeScreen(val id: String, val key: String) : Route()
+
+@Serializable
+data object ProfileScreen : Route()

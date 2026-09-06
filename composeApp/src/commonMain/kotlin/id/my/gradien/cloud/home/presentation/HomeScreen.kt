@@ -1,0 +1,278 @@
+package id.my.gradien.cloud.home.presentation
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import org.jetbrains.compose.resources.stringResource
+import trapgradienmobile.composeapp.generated.resources.Res
+import trapgradienmobile.composeapp.generated.resources.active_alerts_title
+import trapgradienmobile.composeapp.generated.resources.all_systems_operational
+import trapgradienmobile.composeapp.generated.resources.current_air_quality_title
+import trapgradienmobile.composeapp.generated.resources.maximum_subtitle
+import id.my.gradien.cloud.core.ui.components.TrapGradienTopBar
+import id.my.gradien.cloud.core.ui.theme.AppTheme
+import id.my.gradien.cloud.home.presentation.components.AirQualityGauge
+import id.my.gradien.cloud.home.presentation.components.AlertItem
+import id.my.gradien.cloud.home.presentation.components.PurificationPill
+import id.my.gradien.cloud.home.presentation.components.TelemetryGrid
+import id.my.gradien.cloud.home.presentation.components.TelemetryItem
+import id.my.gradien.cloud.nodes.core.domain.models.Node
+import id.my.gradien.cloud.nodes.core.domain.models.NodeConfig
+import id.my.gradien.cloud.nodes.core.domain.models.NodeIssue
+import id.my.gradien.cloud.nodes.core.domain.models.Scale
+import id.my.gradien.cloud.nodes.core.domain.models.SensorData
+import id.my.gradien.cloud.nodes.core.domain.models.Threshold
+import org.jetbrains.compose.ui.tooling.preview.Preview
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeScreen(
+    state: HomeState,
+    onEvent: (HomeEvent) -> Unit,
+    modifier: Modifier = Modifier
+) {
+
+    LaunchedEffect(Unit) {
+        onEvent(HomeEvent.OnLoadData)
+    }
+
+    Scaffold(
+        topBar = {
+            TrapGradienTopBar(
+                onAlertClick = { /* TODO */ }
+            )
+        }
+    ) {
+        PullToRefreshBox(
+            isRefreshing = state.isLoadingAlerts || state.isLoadingNodeData,
+            onRefresh = { onEvent(HomeEvent.OnRefresh) },
+            modifier = modifier.fillMaxSize()
+        ) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(
+                    top = it.calculateTopPadding() + 16.dp,
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 16.dp
+                ),
+                verticalArrangement = Arrangement.spacedBy(24.dp)
+            ) {
+                /* Dashboard Section */
+                state.primaryNode?.let { node ->
+                    item {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(24.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                val field1Config = node.config["field1"]
+                                val field1Value =
+                                    state.latestSensorData?.fields?.get("field1")?.toFloatOrNull()
+                                        ?: 0f
+
+                                AirQualityGauge(
+                                    value = field1Value,
+                                    maxValue = field1Config?.scale?.max?.toFloatOrNull() ?: 100f,
+                                    title = field1Config?.title ?: stringResource(Res.string.current_air_quality_title),
+                                    subtitle = stringResource(Res.string.maximum_subtitle)
+                                )
+
+                                Spacer(modifier = Modifier.height(24.dp))
+
+                                val threshold = field1Config?.thresholds?.find {
+                                    val from = it.from.toFloatOrNull() ?: 0f
+                                    val to = it.to.toFloatOrNull() ?: 0f
+                                    field1Value >= from && field1Value <= to
+                                }
+
+                                threshold?.let {
+                                    PurificationPill(threshold = it)
+                                }
+                            }
+                        }
+                    }
+
+                    /* Telemetry Grid */
+                    item {
+                        val telemetryItems = node.config.filterKeys { it != "field1" }
+                            .mapNotNull { (key, config) ->
+                                val value =
+                                    state.latestSensorData?.fields?.get(key)
+                                        ?: return@mapNotNull null
+                                TelemetryItem(
+                                    label = config.title,
+                                    value = value,
+                                    unit = config.yaxis
+                                )
+                            }
+
+                        TelemetryGrid(items = telemetryItems)
+                    }
+                }
+
+                /* Alerts Section */
+                item {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.Warning,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.error
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = stringResource(Res.string.active_alerts_title),
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
+
+                if (state.isLoadingAlerts) {
+                    item {
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
+                    }
+                } else if (state.alerts.isEmpty()) {
+                    item {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                        ) {
+                            Box(modifier = Modifier.padding(16.dp)) {
+                                Text(text = stringResource(Res.string.all_systems_operational))
+                            }
+                        }
+                    }
+                } else {
+                    items(state.alerts) { issue ->
+                        AlertItem(
+                            issue = issue,
+                            onAcknowledge = { /* TODO */ }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun HomeScreenFullPreview() {
+    AppTheme {
+        val state = HomeState(
+            name = "User",
+            primaryNode = Node(
+                id = "27",
+                nodeId = "b30c7928",
+                nodeKey = "fe2a6b06",
+                name = "Lab P320",
+                type = "TrapGradien",
+                icon = "TrapGradien.png",
+                config = mapOf(
+                    "field1" to NodeConfig(
+                        icon = "wind",
+                        scale = Scale("0", "4"),
+                        title = "Purification Status",
+                        xaxis = "Time",
+                        yaxis = "Purification Level",
+                        thresholds = listOf(
+                            Threshold("0", "0", "check-circle", "#2ecc71", "No Purification"),
+                            Threshold("4", "4", "fan", "#e74c3c", "Maximum Purification")
+                        )
+                    ),
+                    "field2" to NodeConfig(
+                        title = "PM2.5",
+                        yaxis = "μg/m³",
+                        icon = "",
+                        scale = Scale("0", "100"),
+                        xaxis = "",
+                        thresholds = emptyList()
+                    ),
+                    "field3" to NodeConfig(
+                        title = "VOCs",
+                        yaxis = "mg/m³",
+                        icon = "",
+                        scale = Scale("0", "10"),
+                        xaxis = "",
+                        thresholds = emptyList()
+                    ),
+                    "field4" to NodeConfig(
+                        title = "CO2",
+                        yaxis = "ppm",
+                        icon = "",
+                        scale = Scale("0", "2000"),
+                        xaxis = "",
+                        thresholds = emptyList()
+                    ),
+                    "field5" to NodeConfig(
+                        title = "Temp",
+                        yaxis = "Celsius",
+                        icon = "",
+                        scale = Scale("0", "50"),
+                        xaxis = "",
+                        thresholds = emptyList()
+                    )
+                )
+            ),
+            latestSensorData = SensorData(
+                id = "1",
+                createdAt = "2025-12-02 07:06:26",
+                fields = mapOf(
+                    "field1" to "4",
+                    "field2" to "12",
+                    "field3" to "0.4",
+                    "field4" to "420",
+                    "field5" to "22"
+                )
+            ),
+            alerts = listOf(
+                NodeIssue(
+                    time = "2025-12-02 23:12:58",
+                    issue = "Low Battery",
+                    status = "Unresolved"
+                )
+            )
+        )
+        HomeScreen(
+            state = state,
+            onEvent = { }
+        )
+    }
+}

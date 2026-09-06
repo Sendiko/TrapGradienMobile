@@ -19,7 +19,8 @@ actual fun AppTheme(
     CompositionLocalProvider(LocalIsDarkTheme provides darkTheme) {
         MaterialTheme(
             colorScheme = colorScheme,
-            typography = Typography()
+            typography = Typography(),
+            shapes = Shapes
         ) {
             content()
         }
