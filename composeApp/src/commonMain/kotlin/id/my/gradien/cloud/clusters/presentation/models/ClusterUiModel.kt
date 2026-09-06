@@ -1,9 +1,9 @@
 package id.my.gradien.cloud.clusters.presentation.models
 
 import id.my.gradien.cloud.clusters.domain.models.Cluster
-import id.my.gradien.cloud.nodes.domain.models.Node
-import id.my.gradien.cloud.nodes.domain.models.NodeLog
-import id.my.gradien.cloud.nodes.domain.models.SensorData
+import id.my.gradien.cloud.nodes.core.domain.models.Node
+import id.my.gradien.cloud.nodes.core.domain.models.NodeLog
+import id.my.gradien.cloud.nodes.core.domain.models.SensorData
 
 data class ClusterUiModel(
     val cluster: Cluster,
