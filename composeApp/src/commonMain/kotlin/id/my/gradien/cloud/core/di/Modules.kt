@@ -14,14 +14,16 @@ import id.my.gradien.cloud.login.data.datasource.LoginDataSourceImpl
 import id.my.gradien.cloud.login.domain.LoginRepository
 import id.my.gradien.cloud.login.presentation.LoginViewModel
 import id.my.gradien.cloud.home.presentation.HomeViewModel
-import id.my.gradien.cloud.nodes.data.NodeRepositoryImpl
-import id.my.gradien.cloud.nodes.data.datasource.NodeDataSource
-import id.my.gradien.cloud.nodes.data.datasource.NodeDataSourceImpl
-import id.my.gradien.cloud.nodes.domain.NodeRepository
+import id.my.gradien.cloud.nodes.core.data.NodeRepositoryImpl
+import id.my.gradien.cloud.nodes.core.data.datasource.NodeDataSource
+import id.my.gradien.cloud.nodes.core.data.datasource.NodeDataSourceImpl
+import id.my.gradien.cloud.nodes.core.domain.NodeRepository
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import id.my.gradien.cloud.nodes.list.presentation.NodeListViewModel
+import id.my.gradien.cloud.nodes.detail.presentation.NodeDetailViewModel
 
 expect val platformModules: Module
 
@@ -41,4 +43,6 @@ val sharedModules = module {
     factory { LoginViewModel(get(), get()) }
     factory { HomeViewModel(get(), get()) }
     factory { ClustersViewModel(get(), get(), get()) }
+    factory { NodeListViewModel(get(), get(), get()) }
+    factory { NodeDetailViewModel(get(), get()) }
 }

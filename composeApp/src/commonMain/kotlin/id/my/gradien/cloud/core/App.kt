@@ -25,21 +25,29 @@ import id.my.gradien.cloud.core.navigation.LoginScreen as RouteLoginScreen
 import id.my.gradien.cloud.core.navigation.NodeListScreen as RouteNodeListScreen
 import id.my.gradien.cloud.core.navigation.ProfileScreen as RouteProfileScreen
 import id.my.gradien.cloud.core.navigation.SplashScreen as RouteSplashScreen
-import id.my.gradien.cloud.core.ui.components.GradienTopBar
 import id.my.gradien.cloud.core.ui.theme.AppTheme
-import id.my.gradien.cloud.home.presentation.HomeScreenContent
+import id.my.gradien.cloud.home.presentation.HomeScreen
 import id.my.gradien.cloud.home.presentation.HomeViewModel
 import id.my.gradien.cloud.login.presentation.LoginScreen
 import id.my.gradien.cloud.login.presentation.LoginViewModel
 import id.my.gradien.cloud.splash.presentation.SplashScreen
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.KoinApplication
+import id.my.gradien.cloud.core.di.sharedModules
 import org.koin.compose.viewmodel.koinViewModel
 
+import id.my.gradien.cloud.core.navigation.NodeScreen as RouteNodeScreen
+import id.my.gradien.cloud.nodes.list.presentation.NodeListScreen
+import id.my.gradien.cloud.nodes.list.presentation.NodeListViewModel
+import id.my.gradien.cloud.nodes.detail.presentation.NodeDetailScreen
+import id.my.gradien.cloud.nodes.detail.presentation.NodeDetailViewModel
+import androidx.navigation.toRoute
+import androidx.compose.runtime.LaunchedEffect
+
 @Composable
-@Preview
 fun App(darkTheme: Boolean = false) {
     AppTheme(
-        darkTheme = darkTheme
+        darkTheme = false
     ) {
         val navController = rememberNavController()
         val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -49,13 +57,6 @@ fun App(darkTheme: Boolean = false) {
         val isMainTab = mainTabs.any { currentDestination?.hasRoute(it::class) == true }
 
         Scaffold(
-            topBar = {
-                if (isMainTab) {
-                    GradienTopBar(
-                        onAlertClick = { /* TODO */ }
-                    )
-                }
-            },
             bottomBar = {
                 if (isMainTab) {
                     NavigationBar {
@@ -89,7 +90,7 @@ fun App(darkTheme: Boolean = false) {
         ) { paddingValues ->
             NavHost(
                 navController = navController,
-                startDestination = RouteHomeScreen,
+                startDestination = RouteLoginScreen,
                 modifier = Modifier.padding(paddingValues)
             ) {
                 composable<RouteSplashScreen> {
@@ -117,23 +118,60 @@ fun App(darkTheme: Boolean = false) {
                 composable<RouteHomeScreen> {
                     val viewModel = koinViewModel<HomeViewModel>()
                     val state by viewModel.state.collectAsStateWithLifecycle()
-                    HomeScreenContent(state = state)
+
+                    HomeScreen(
+                        state = state,
+                        onEvent = viewModel::onEvent
+                    )
                 }
                 composable<RouteClustersScreen> {
                     val viewModel = koinViewModel<ClustersViewModel>()
                     val state by viewModel.state.collectAsStateWithLifecycle()
+
                     ClustersScreen(
+                        onEvent = viewModel::onEvent,
                         state = state,
-                        onToggleExpand = viewModel::toggleExpand
                     )
                 }
                 composable<RouteNodeListScreen> {
-                    Surface { Text("Nodes Screen Content") }
+                    val viewModel = koinViewModel<NodeListViewModel>()
+                    val state by viewModel.state.collectAsStateWithLifecycle()
+
+                    NodeListScreen(
+                        state = state,
+                        onEvent = viewModel::onEvent,
+                        onNavigate = { navController.navigate(it) }
+                    )
+                }
+                composable<RouteNodeScreen> { backStackEntry ->
+                    val args = backStackEntry.toRoute<RouteNodeScreen>()
+                    val viewModel = koinViewModel<NodeDetailViewModel>()
+                    val state by viewModel.state.collectAsStateWithLifecycle()
+
+                    LaunchedEffect(args.id, args.key) {
+                        viewModel.initNode(args.id, args.key)
+                    }
+
+                    NodeDetailScreen(
+                        state = state,
+                        onEvent = viewModel::onEvent,
+                        onNavigateBack = { navController.popBackStack() }
+                    )
                 }
                 composable<RouteProfileScreen> {
                     Surface { Text("Profile Screen Content") }
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun AppPreview() {
+    KoinApplication(application = {
+        modules(sharedModules)
+    }) {
+        App()
     }
 }
