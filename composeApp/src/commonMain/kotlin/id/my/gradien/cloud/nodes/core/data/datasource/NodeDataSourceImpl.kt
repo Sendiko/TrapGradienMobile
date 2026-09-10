@@ -8,6 +8,8 @@ import id.my.gradien.cloud.nodes.core.data.dto.NodeRequest
 import id.my.gradien.cloud.nodes.core.data.dto.NodeResponse
 import io.ktor.client.*
 import io.ktor.client.request.*
+import io.ktor.client.request.forms.FormDataContent
+import io.ktor.http.Parameters
 import kotlinx.serialization.json.JsonObject
 
 class NodeDataSourceImpl(
@@ -18,7 +20,15 @@ class NodeDataSourceImpl(
     ): Result<NodeResponse, DataError.Remote> {
         return safeCall {
             client.post("node") {
-                setBody(request)
+                setBody(
+                    FormDataContent(
+                        Parameters.build {
+                            append("email", request.email)
+                            append("password", request.password)
+                            append("id", request.id)
+                        }
+                    )
+                )
             }
         }
     }
@@ -26,6 +36,9 @@ class NodeDataSourceImpl(
     override suspend fun getNodeLogs(
         id: String
     ): Result<NodeLogResponse, DataError.Remote> {
+        if (id.isBlank()) {
+            return Result.Error(DataError.Remote.BAD_REQUEST)
+        }
         return safeCall {
             client.get("logs") {
                 parameter("id", id)

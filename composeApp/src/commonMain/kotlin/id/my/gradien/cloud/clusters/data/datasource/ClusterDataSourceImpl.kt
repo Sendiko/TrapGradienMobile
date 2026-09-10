@@ -7,6 +7,8 @@ import id.my.gradien.cloud.clusters.data.dto.ClusterRequest
 import id.my.gradien.cloud.clusters.data.dto.ClusterResponse
 import io.ktor.client.*
 import io.ktor.client.request.*
+import io.ktor.client.request.forms.FormDataContent
+import io.ktor.http.Parameters
 
 class ClusterDataSourceImpl(
     private val client: HttpClient
@@ -16,7 +18,15 @@ class ClusterDataSourceImpl(
     ): Result<ClusterResponse, DataError.Remote> {
         return safeCall {
             client.post("cluster") {
-                setBody(request)
+                setBody(
+                    FormDataContent(
+                        Parameters.build {
+                            append("email", request.email)
+                            append("password", request.password)
+                            append("id", request.id)
+                        }
+                    )
+                )
             }
         }
     }
