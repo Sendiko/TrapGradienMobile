@@ -5,8 +5,11 @@ import id.my.gradien.cloud.core.network.utils.Result
 import id.my.gradien.cloud.core.network.utils.safeCall
 import id.my.gradien.cloud.login.data.dto.LoginRequest
 import id.my.gradien.cloud.login.data.dto.LoginResponse
-import io.ktor.client.*
-import io.ktor.client.request.*
+import io.ktor.client.HttpClient
+import io.ktor.client.request.forms.FormDataContent
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.Parameters
 
 class LoginDataSourceImpl(
     val client: HttpClient
@@ -15,8 +18,15 @@ class LoginDataSourceImpl(
         request: LoginRequest
     ): Result<LoginResponse, DataError.Remote> {
         return safeCall<LoginResponse> {
-            client.post {
-                setBody(request)
+            client.post("user") {
+                setBody(
+                    FormDataContent(
+                        Parameters.build {
+                            append("email", request.email)
+                            append("password", request.password)
+                        }
+                    )
+                )
             }
         }
     }
