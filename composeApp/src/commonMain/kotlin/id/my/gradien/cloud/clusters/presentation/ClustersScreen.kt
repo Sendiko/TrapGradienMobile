@@ -48,7 +48,6 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun ClustersScreen(
     state: ClustersState,
     onEvent: (ClustersEvent) -> Unit,
-    modifier: Modifier = Modifier
 ) {
 
     LaunchedEffect(state.clusters) {
@@ -65,8 +64,7 @@ fun ClustersScreen(
     ) {
         PullToRefreshBox(
             isRefreshing = state.isLoading,
-            onRefresh = { onEvent(ClustersEvent.OnLoadData) },
-            modifier = modifier.fillMaxSize()
+            onRefresh = { onEvent(ClustersEvent.OnLoadData) }
         ) {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),

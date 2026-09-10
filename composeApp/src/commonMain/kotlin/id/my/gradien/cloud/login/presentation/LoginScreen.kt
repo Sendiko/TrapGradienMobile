@@ -34,6 +34,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import id.my.gradien.cloud.core.ui.theme.AppTheme
 import id.my.gradien.cloud.core.ui.theme.Dimens
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -48,16 +49,20 @@ import trapgradienmobile.composeapp.generated.resources.password_label
 import trapgradienmobile.composeapp.generated.resources.password_placeholder
 import trapgradienmobile.composeapp.generated.resources.trapgradien
 import trapgradienmobile.composeapp.generated.resources.welcome_back
+import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun LoginScreen(
-    state: LoginState = LoginState(),
+    state: LoginState,
     onEvent: (LoginEvent) -> Unit,
     onNavigate: () -> Unit
 ) {
 
     LaunchedEffect(state.isSuccess) {
-        onNavigate()
+        if (state.isSuccess) {
+            delay(2.seconds)
+            onNavigate()
+        }
     }
 
     Scaffold(

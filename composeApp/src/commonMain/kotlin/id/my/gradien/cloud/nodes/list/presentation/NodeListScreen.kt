@@ -14,6 +14,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
@@ -24,6 +25,7 @@ import org.jetbrains.compose.resources.stringResource
 import trapgradienmobile.composeapp.generated.resources.Res
 import trapgradienmobile.composeapp.generated.resources.no_nodes_found
 import id.my.gradien.cloud.core.navigation.NodeScreen
+import id.my.gradien.cloud.core.ui.components.TrapGradienTopBar
 import id.my.gradien.cloud.core.ui.theme.AppTheme
 import id.my.gradien.cloud.nodes.list.presentation.components.NodeCardItem
 import id.my.gradien.cloud.nodes.list.presentation.components.NodeFilterRow
@@ -38,71 +40,84 @@ fun NodeListScreen(
     onEvent: (NodeListEvent) -> Unit,
     onNavigate: (Any) -> Unit
 ) {
-    PullToRefreshBox(
-        isRefreshing = state.isLoading,
-        onRefresh = { onEvent(NodeListEvent.OnRefresh) },
-        modifier = modifier.fillMaxSize()
-    ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+    Scaffold (
+        topBar = {
+            TrapGradienTopBar(
+                onAlertClick = { /* TODO */ }
+            )
+        }
+    ){
+        PullToRefreshBox(
+            isRefreshing = state.isLoading,
+            onRefresh = { onEvent(NodeListEvent.OnRefresh) },
+            modifier = modifier.fillMaxSize()
         ) {
-            /* Search Input Bar */
-            item {
-                NodeSearchBar(
-                    query = state.searchQuery,
-                    onQueryChange = { onEvent(NodeListEvent.OnSearchQueryChanged(it)) }
-                )
-            }
-
-            /* Horizontal Filter Chips */
-            item {
-                NodeFilterRow(
-                    selectedFilter = state.selectedFilter,
-                    onFilterSelect = { onEvent(NodeListEvent.OnFilterSelected(it)) }
-                )
-            }
-
-            /* Loading state */
-            if (state.isLoading) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(
+                    top = it.calculateTopPadding() + 16.dp,
+                    start = 16.dp,
+                    end = 16.dp,
+                    bottom = 16.dp
+                ),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                /* Search Input Bar */
                 item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(32.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-                    }
+                    NodeSearchBar(
+                        query = state.searchQuery,
+                        onQueryChange = { onEvent(NodeListEvent.OnSearchQueryChanged(it)) }
+                    )
                 }
-            } else if (state.filteredNodes.isEmpty()) {
+
+                /* Horizontal Filter Chips */
                 item {
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
+                    NodeFilterRow(
+                        selectedFilter = state.selectedFilter,
+                        onFilterSelect = { onEvent(NodeListEvent.OnFilterSelected(it)) }
+                    )
+                }
+
+                /* Loading state */
+                if (state.isLoading) {
+                    item {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(24.dp),
+                                .padding(32.dp),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text(
-                                text = stringResource(Res.string.no_nodes_found),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
+                            CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                         }
                     }
-                }
-            } else {
-                items(state.filteredNodes, key = { it.id }) { node ->
-                    NodeCardItem(
-                        node = node,
-                        onClick = { onNavigate(NodeScreen(node.nodeId, node.name)) }
-                    )
+                } else if (state.filteredNodes.isEmpty()) {
+                    item {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
+                            shape = RoundedCornerShape(12.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(24.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = stringResource(Res.string.no_nodes_found),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                    }
+                } else {
+                    items(state.filteredNodes, key = { it.id }) { node ->
+                        NodeCardItem(
+                            node = node,
+                            onClick = { onNavigate(NodeScreen(node.nodeId, node.name)) }
+                        )
+                    }
                 }
             }
         }
