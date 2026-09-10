@@ -91,7 +91,7 @@ fun App(darkTheme: Boolean = false) {
             NavHost(
                 navController = navController,
                 startDestination = RouteLoginScreen,
-                modifier = Modifier.padding(paddingValues)
+                modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding())
             ) {
                 composable<RouteSplashScreen> {
                     SplashScreen(
@@ -110,7 +110,7 @@ fun App(darkTheme: Boolean = false) {
                         onEvent = viewModel::onEvent,
                         onNavigate = {
                             navController.navigate(RouteHomeScreen) {
-                                popUpTo(RouteLoginScreen) { inclusive = true }
+                                popUpTo(RouteHomeScreen) { inclusive = true }
                             }
                         }
                     )
