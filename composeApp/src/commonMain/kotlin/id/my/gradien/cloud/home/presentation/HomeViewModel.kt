@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.seconds
 
 class HomeViewModel(
     private val sessionManager: SessionManager,
@@ -96,7 +97,6 @@ class HomeViewModel(
 
     private suspend fun fetchPrimaryNodeData(nodeId: String, email: String, password: String) {
         _isLoadingNodeData.value = true
-        print("[HOME] HomeViewModel.fetchPrimaryNodeData() called.")
         nodeRepository.getNodeDetails(email, password, nodeId)
             .onSuccess { node ->
                 _primaryNode.value = node
@@ -114,14 +114,13 @@ class HomeViewModel(
                     .onSuccess { data ->
                         _latestSensorData.value = data.firstOrNull()
                     }
-                delay(10_000) // Poll every 10 seconds
+                delay(10.seconds) // Poll every 10 seconds
             }
         }
     }
 
     private suspend fun fetchAlerts(nodes: List<String>, email: String, password: String) {
         _isLoadingAlerts.value = true
-        print("[HOME] HomeViewModel.fetchAlerts() called.")
 
         val deferredAlerts = nodes.map { nodeId ->
             viewModelScope.async {
