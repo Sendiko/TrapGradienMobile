@@ -41,7 +41,7 @@ class LoginViewModel(
                     sessionManager.saveSession(
                         name = user.name,
                         email = user.email,
-                        password = user.password,
+                        password = state.value.password,
                         nodeIds = user.nodeIds,
                         clusterIds = user.clusterIds
                     )
